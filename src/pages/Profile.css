@@ -1,0 +1,96 @@
+.profile {
+  max-width: 400px;
+  margin: 40px auto;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background: #fdfdfd;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Avatar lingkaran */
+.avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f6d365, #fda085);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.emoji {
+  font-size: 3rem;
+  animation: sway 3s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+}
+
+.username {
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Reset PIN section */
+.reset-section h2 {
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.pin-input {
+  background: #f7f7f7;
+  color: black;
+  width: 80%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.pin-input:focus {
+  border-color: #f6d365;
+  box-shadow: 0 0 8px rgba(246, 211, 101, 0.5);
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #155E75, #40adc6);
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.reset-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* Message */
+.message {
+  margin-top: 10px;
+  color: #f44336;
+  font-weight: 500;
+}

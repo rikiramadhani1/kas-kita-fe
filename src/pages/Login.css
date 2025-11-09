@@ -1,0 +1,128 @@
+/* Reset global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Login page full layar */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background: white; /* background page */
+  padding: 0 10px; /* card tidak menempel ke tepi */
+}
+
+/* Card login */
+.login-card {
+  background: white; /* biru seperti navbar */
+  padding: 40px 30px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  color: white;
+}
+
+/* Header card */
+.login-header h2 {
+  color: #155E75; /* gold */
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.login-header p {
+  font-size: 0.9rem;
+  color: #e0e0e0; /* ringan dan kontras */
+}
+
+/* Form input */
+.login-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-card label {
+  text-align: left;
+  color: #373434;
+  margin-top: 15px;
+}
+
+.login-card input {
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid #155E75;
+  font-size: 1rem;
+  transition: 0.2s;
+  background: transparent; /* transparan sebelum diisi */
+  color: #ffffff; /* teks putih */
+}
+
+.login-card input::placeholder {
+  color: #e0e0e0; /* placeholder lebih terang */
+}
+
+.login-card input:focus {
+  outline: none;
+  border-color: #FFD700; /* highlight gold */
+  box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+  background: rgba(255,255,255,0.1); /* sedikit highlight saat fokus */
+  color: #696868;
+}
+
+/* Button login */
+
+
+.login-card button:hover {
+  background: #0F4A66; /* biru lebih gelap saat hover */
+  color: #FFD700;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .login-card {
+    width: 100%;
+    padding: 30px 20px;
+  }
+}
+
+
+/* Button login default (disabled) */
+.login-card button {
+  padding: 12px;
+  border-radius: 12px;
+  background: #155E75; /* biru utama */
+  color: white; /* teks gold */
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  cursor: not-allowed; /* kursornya disabled */
+  transition: 0.3s;
+  opacity: 0.5; /* terlihat samar */
+}
+
+/* Button login aktif */
+.login-card button.active {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.login-card button.active:hover {
+  background: #0F4A66; /* biru lebih gelap saat hover */
+  color: white;
+}
+

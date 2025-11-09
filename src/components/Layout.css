@@ -1,0 +1,36 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #f7f7f7;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #1e88e5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.content {
+  flex: 1;
+  margin-top: 20px; /* kasih jarak supaya konten gak ketiban navbar */
+  padding: 10px;
+  overflow-y: auto;
+}

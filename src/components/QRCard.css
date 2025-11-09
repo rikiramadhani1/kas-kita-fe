@@ -1,0 +1,16 @@
+.qr-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.qr-image {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  border-radius: 12px;
+}
