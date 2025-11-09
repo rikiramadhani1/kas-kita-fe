@@ -5,16 +5,17 @@ import "./Login.css";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { isLoggedIn, login } = useAuth(); // ✅ ambil login dari context
+  const { isLoggedIn, login } = useAuth();
   const [phone, setPhone] = useState("");
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const isFormValid = phone.trim() !== "" && pin.trim() !== "";
+
   // 🔹 Redirect otomatis jika sudah login
   useEffect(() => {
     if (isLoggedIn) {
-      console.log("[Login] Sudah login, redirect ke /");
       navigate("/", { replace: true });
     }
   }, [isLoggedIn, navigate]);
@@ -22,12 +23,14 @@ export default function Login() {
   // 🔹 Handle login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isFormValid) return; // Jangan submit kalau belum lengkap
+
     setLoading(true);
     setError("");
 
     try {
-      await login(phone, pin); // ✅ pakai context login
-      navigate("/", { replace: true }); // ✅ redirect setelah sukses
+      await login(phone, pin);
+      navigate("/", { replace: true });
     } catch (err: any) {
       console.error("Login gagal:", err);
       setError(err.message || "Login gagal, cek nomor dan PIN.");
@@ -59,7 +62,11 @@ export default function Login() {
 
           {error && <p style={{ color: "red" }}>{error}</p>}
 
-          <button type="submit" disabled={loading}>
+          <button
+            type="submit"
+            disabled={loading || !isFormValid}
+            className={isFormValid ? "active" : ""}
+          >
             {loading ? "Loading..." : "Login"}
           </button>
         </form>
@@ -67,5 +74,3 @@ export default function Login() {
     </div>
   );
 }
-
-
