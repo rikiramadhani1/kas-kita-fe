@@ -36,3 +36,18 @@
   border-radius: 3px;
   background: linear-gradient(90deg, #FFD700, #FFA500); /* Gold → Orange */
 }
+
+
+.logout-icon {
+  margin-left: auto; /* push ke kanan */
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff4d4f;
+  display: flex;
+  align-items: center;
+}
+
+.logout-icon:hover {
+  color: #ff7875;
+}

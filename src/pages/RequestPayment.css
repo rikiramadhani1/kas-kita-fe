@@ -1,14 +1,43 @@
 .request {
-  max-width: 400px;
+  max-width: 100%;
+  width: 100%;
   margin: 40px auto;
   font-family: 'Segoe UI', sans-serif;
   color: #333;
-  text-align: center;
-  padding: 20px;
+  padding: 10px;
   box-sizing: border-box;
-  background: #fdfdfd;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+@media (min-width: 360px) {
+  .request {
+    max-width: 360px;
+    padding: 5px;
+    margin: 5px 0px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 480px) {
+  .request {
+    max-width: 400px;          
+    margin: 20px auto;
+    padding: 0 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  .request {
+    max-width: 600px;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .request {
+    max-width: 900px;
+    font-size: 1.3rem;
+  }
 }
 
 .friendly-title {

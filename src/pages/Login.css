@@ -148,6 +148,7 @@ html, body {
 .eye-icon {
   position: absolute;
   right: 0.75rem; /* jarak dari kanan input */
+  top: 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;

@@ -135,7 +135,7 @@ export default function RequestPayment() {
 
   {/* === REKAP PEMBAYARAN === */}
   <div className="summary-card">
-    <h3>Rekap Pembayaran Tahun {currentYear}</h3>
+    <h3>Rekap Pembayaran</h3>
 
     {summary ? (
       <p className={`status-text ${status.type}`}>{status.text}</p>
