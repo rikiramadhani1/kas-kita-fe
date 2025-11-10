@@ -91,6 +91,45 @@
 /* Message */
 .message {
   margin-top: 10px;
-  color: #f44336;
   font-weight: 500;
 }
+
+.message.error {
+  color: #f44336;
+}
+
+.message.success {
+  color: #4caf50;
+}
+
+.pin-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.pin-wrapper input {
+  width: 100%;
+  padding-right: 2.5rem; /* ruang untuk icon mata */
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  font-size: 1.1rem;
+}
+
+.eye-icon:hover {
+  color: #000;
+}
+

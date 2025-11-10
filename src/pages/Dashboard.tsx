@@ -22,7 +22,7 @@ export default function Dashboard() {
   const [saldoTotal, setSaldoTotal] = useState<number>(0);
   const [transactions, setTransactions] = useState<MonthlyTransactions[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(2025);
-  const years = [2023, 2024, 2025];
+  const years = [2024, 2025];
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);

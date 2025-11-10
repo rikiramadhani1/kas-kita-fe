@@ -7,6 +7,7 @@ type Summary = {
   unpaid: number;
   pending: number;
   monthsDue: string[];
+  overpayment: number;
 };
 
 export default function RequestPayment() {
@@ -74,15 +75,25 @@ export default function RequestPayment() {
   };
 
   /** === Pesan dinamis === */
-  const getStatusMessage = () => {
+ const getStatusMessage = () => {
   if (!summary)
-    return { text: "Memuat status iuran...", type: "loading" }; // ✅ bukan string lagi
+    return { text: "Memuat status iuran...", type: "loading" };
 
-  const { unpaid, pending, monthsDue } = summary;
+  const { unpaid, pending, monthsDue, overpayment } = summary;
+
+  // Tentukan bulan terakhir yang dibayar
+  let lastPaidMonthMessage = "";
+  if (overpayment > 0) {
+    const now = new Date();
+    const lastPaidMonth = new Date(now.getFullYear(), now.getMonth() + overpayment, 1); 
+    const monthName = lastPaidMonth.toLocaleString("id-ID", { month: "long", year: "numeric" });
+    lastPaidMonthMessage = `Iuran sudah lunas sampai bulan ${monthName} 🎉`;
+  }
+
   const bulanList =
     monthsDue?.length > 0 ? monthsDue.join(", ") : "beberapa bulan terakhir";
 
-  if (unpaid === 0 && pending === 0)
+  if (unpaid === 0 && pending === 0 && overpayment === 0)
     return { text: "Semua iuran sudah lunas 🎉", type: "success" };
 
   if (unpaid > 0 && pending > 0)
@@ -99,9 +110,12 @@ export default function RequestPayment() {
 
   if (pending > 0)
     return {
-      text: `Ada ${pending} pembayaran yang masih menunggu persetujuan ⏳.`,
+      text: `Ada ${pending} pembayaran yang masih menunggu persetujuan ⏳`,
       type: "info",
     };
+
+  if (overpayment > 0)
+    return { text: lastPaidMonthMessage, type: "success" };
 
   return { text: "Status iuran tidak diketahui 🤔", type: "neutral" };
 };
@@ -110,83 +124,88 @@ export default function RequestPayment() {
   const status = getStatusMessage();
 
   return (
-    <div className="request">
-      <h2 className="friendly-title">Halo Dunsanak, Saatnya bayar iuran</h2>
+  <div className="request">
+  {/* === PESAN RAMAH DINAMIS === */}
+  {summary && summary.unpaid > 0 && (
+    <h2 className="friendly-title">
+      Ke pasar membeli ketupat,<br />
+      Bayar iuran jangan sampai telat! 😄
+    </h2>
+  )}
 
-      {/* === REKAP PEMBAYARAN === */}
-      <div className="summary-card">
-        <h3>Rekap Pembayaran Tahun {currentYear}</h3>
+  {/* === REKAP PEMBAYARAN === */}
+  <div className="summary-card">
+    <h3>Rekap Pembayaran Tahun {currentYear}</h3>
 
-        {summary ? (
-          <>
-            <p className={`status-text ${status.type}`}>{status.text}</p>
-          </>
-        ) : (
-          <p>Memuat data...</p>
-        )}
-      </div>
+    {summary ? (
+      <p className={`status-text ${status.type}`}>{status.text}</p>
+    ) : (
+      <p>Memuat data...</p>
+    )}
+  </div>
 
-      {/* === STEP 1: PILIH PEMBAYARAN === */}
-      <div className="step-card">
-        <h3>Step 1: Pilih Metode Pembayaran</h3>
-        <p className="note">Note: Besar iuran per bulan Rp 20.000/bulan</p>
+  {/* === STEP 1 & 2 tetap sama === */}
+  <div className="step-card">
+    <h3>Step 1: Pilih Metode Pembayaran</h3>
+    <p className="note">Note: Besar iuran per bulan Rp 20.000/bulan</p>
 
-        <div className="tab-header">
-          <button
-            className={activeTab === "qris" ? "active" : ""}
-            onClick={() => setActiveTab("qris")}
-          >
-            QRIS
-          </button>
-          <button
-            className={activeTab === "shopeepay" ? "active" : ""}
-            onClick={() => setActiveTab("shopeepay")}
-          >
-            ShopeePay
-          </button>
-        </div>
-
-        <div className="tab-content">
-          {activeTab === "qris" && (
-            <div className="qr-area">
-              <div className="qr-inner-card">
-                <QRCard qrUrl="/qris.png" />
-                <p className="hint">QRIS Statis Bendahara</p>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "shopeepay" && (
-            <div className="shopeepay-area">
-              <p className="hint">
-                Transfer ke ShopeePay Bendahara: <strong>081234567890</strong>
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* === STEP 2: LAPORAN === */}
-      <div className="step-card">
-        <h3>Step 2: Lakukan Laporan</h3>
-        <label>Jumlah bulan yang dibayar</label>
-        <input
-          type="number"
-          min={1}
-          value={months}
-          onChange={(e) => setMonths(Number(e.target.value))}
-        />
-        <button
-          className="report-btn"
-          onClick={handleReport}
-          disabled={loading}
-        >
-          {loading ? "Mengirim..." : "Kirim Laporan"}
-        </button>
-
-        {message && <p className="success">{message}</p>}
-      </div>
+    <div className="tab-header">
+      <button
+        className={activeTab === "qris" ? "active" : ""}
+        onClick={() => setActiveTab("qris")}
+      >
+        QRIS
+      </button>
+      <button
+        className={activeTab === "shopeepay" ? "active" : ""}
+        onClick={() => setActiveTab("shopeepay")}
+      >
+        ShopeePay
+      </button>
     </div>
-  );
+
+    <div className="tab-content">
+      {activeTab === "qris" && (
+        <div className="qr-area">
+          <div className="qr-inner-card">
+            <QRCard qrUrl="/qris.png" />
+            <p className="hint">QRIS Statis Bendahara</p>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "shopeepay" && (
+        <div className="shopeepay-area">
+          <p className="hint">
+            Transfer ke ShopeePay Bendahara: <strong>082161682424</strong>
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <div className="step-card">
+    <h3>Step 2: Lakukan Laporan</h3>
+    <label>Jumlah bulan yang dibayar</label>
+    <input
+      type="number"
+      min={1}
+      value={months}
+      onChange={(e) => setMonths(Number(e.target.value))}
+    />
+    <button
+      className="report-btn"
+      onClick={handleReport}
+      disabled={loading}
+    >
+      {loading ? "Mengirim..." : "Kirim Laporan"}
+    </button>
+
+    {message && <p className="success">{message}</p>}
+  </div>
+</div>
+
+);
+
 }
 

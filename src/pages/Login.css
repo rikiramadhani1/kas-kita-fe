@@ -126,3 +126,39 @@ html, body {
   color: white;
 }
 
+
+/* Bungkus input + icon */
+.pin-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Input PIN */
+.pin-wrapper input {
+  width: 100%;
+  padding-right: 2.5rem; /* beri space untuk icon di kanan */
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+}
+
+/* Icon mata */
+.eye-icon {
+  position: absolute;
+  right: 0.75rem; /* jarak dari kanan input */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  font-size: 1.1rem;
+}
+
+/* Hover icon */
+.eye-icon:hover {
+  color: #000;
+}
+
+
