@@ -12,9 +12,9 @@ type Summary = {
 
 export default function RequestPayment() {
   const [activeTab, setActiveTab] = useState<"qris" | "shopeepay">("qris");
-  const [months, setMonths] = useState(1);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState<"success" | "error">("error");
   const [summary, setSummary] = useState<Summary | null>(null);
 
   const memberId = 15;
@@ -30,14 +30,16 @@ export default function RequestPayment() {
 
       console.log("[UI] Summary response:", res.data);
 
-      if (res.data.meta?.success || res.data.message) {
+      if (res.data.meta?.success) {
         setSummary(res.data.data);
       } else {
         setMessage(res.data.meta?.message || "Gagal memuat data pembayaran");
+        setMessageType("error");
       }
     } catch (err) {
       console.error("[UI] Failed to load summary", err);
       setMessage("Gagal memuat data pembayaran");
+      setMessageType("error");
     }
   };
 
@@ -46,33 +48,77 @@ export default function RequestPayment() {
   }, []);
 
   /** === Handle submit laporan (create payment) === */
-  const handleReport = async () => {
-    if (months <= 0) return alert("Jumlah bulan harus minimal 1");
+//   const handleReport = async () => {
+//     if (months <= 0) return alert("Jumlah bulan harus minimal 1");
 
-    setLoading(true);
-    setMessage("");
-    try {
-  const res = await api.post("/payments/request", { months });
+//     setLoading(true);
+//     setMessage("");
+//     try {
+//   const res = await api.post("/payments/request", { months });
 
-  const meta = res.data?.meta;
-  if (meta?.success) {
-    setMessage("Laporan berhasil dikirim ✅");
-    await fetchSummary();
-  } else {
-    setMessage(meta?.message || "Gagal mengirim laporan");
+//   const meta = res.data?.meta;
+//   if (meta?.success) {
+//     setMessage("Laporan berhasil dikirim ✅");
+//     await fetchSummary();
+//   } else {
+//     setMessage(meta?.message || "Gagal mengirim laporan");
+//   }
+// } catch (err: any) {
+//   console.error("[PAYMENT REQUEST ERROR]", err);
+//   const message =
+//     err.response?.data?.meta?.message ||
+//     err.message ||
+//     "Terjadi kesalahan saat mengirim laporan";
+//   setMessage(message);
+// } finally {
+//   setLoading(false);
+// }
+
+//   };
+
+
+
+const [file, setFile] = useState<File | null>(null);
+
+const handleConfirm = async () => {
+  if (!file) return alert("Silakan upload bukti pembayaran terlebih dahulu");
+
+  setLoading(true);
+  setMessage("");
+
+  try {
+    const formData = new FormData();
+    formData.append("image_upload", file);
+
+    const res = await api.post("/payments/confirm", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    const meta = res.data?.meta;
+    const data = res.data?.data;
+
+    if (meta?.success) {
+      setMessage(
+        `${meta.message}. Nominal Rp${data.nominal?.toLocaleString()} untuk ${data.months} bulan.`
+      );
+      await fetchSummary();
+    } else {
+      setMessage(meta?.message || "Gagal mengirim konfirmasi");
+      setMessageType("error");
+    }
+  } catch (err: any) {
+    console.error("[PAYMENT CONFIRM ERROR]", err);
+    const message =
+      err.response?.data?.meta?.message ||
+      err.message ||
+      "Terjadi kesalahan saat mengirim konfirmasi";
+    setMessage(message);
+    setMessageType("error");
+  } finally {
+    setLoading(false);
   }
-} catch (err: any) {
-  console.error("[PAYMENT REQUEST ERROR]", err);
-  const message =
-    err.response?.data?.meta?.message ||
-    err.message ||
-    "Terjadi kesalahan saat mengirim laporan";
-  setMessage(message);
-} finally {
-  setLoading(false);
-}
+};
 
-  };
 
   /** === Pesan dinamis === */
  const getStatusMessage = () => {
@@ -185,23 +231,28 @@ export default function RequestPayment() {
   </div>
 
   <div className="step-card">
-    <h3>Step 2: Lakukan Laporan</h3>
-    <label>Jumlah bulan yang dibayar</label>
-    <input
-      type="number"
-      min={1}
-      value={months}
-      onChange={(e) => setMonths(Number(e.target.value))}
-    />
-    <button
-      className="report-btn"
-      onClick={handleReport}
-      disabled={loading}
-    >
-      {loading ? "Mengirim..." : "Kirim Laporan"}
-    </button>
+    <h3>Step 2: Konfirmasi Pembayaran</h3>
+      <label>Upload bukti pembayaran (JPG/PNG)</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
+        />
 
-    {message && <p className="success">{message}</p>}
+        <button
+          className="report-btn"
+          onClick={handleConfirm}
+          disabled={loading}
+        >
+          {loading ? "Mengirim..." : "Kirim Konfirmasi"}
+        </button>
+
+      {message && (
+          <p className={`message ${messageType === "success" ? "success" : "error"}`}>
+            {message}
+          </p>
+        )}
+
   </div>
 </div>
 

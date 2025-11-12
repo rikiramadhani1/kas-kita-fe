@@ -119,48 +119,6 @@
   margin-top: 8px;
 }
 
-/* Input & button laporan */
-input[type="number"] {
-  background: #f7f7f7;
-  color: black;
-  width: 80%;
-  padding: 10px 15px;
-  font-size: 1rem;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  margin-bottom: 12px;
-  outline: none;
-  transition: all 0.3s;
-}
-
-input[type="number"]:focus {
-  box-shadow: 0 0 8px #40adc6;
-}
-
-.report-btn {
-  background: linear-gradient(135deg, #155E75, #40adc6);
-  color: #fff;
-  font-weight: 600;
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.report-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-}
-
-.success {
-  color: #28a745;
-  font-weight: 500;
-  margin-top: 10px;
-}
-
-
-
 .summary-card {
   background: #f5f8ff;
   padding: 16px;
@@ -178,3 +136,112 @@ input[type="number"]:focus {
   margin-bottom: 6px;
   font-size: 15px;
 }
+
+.payment-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+input[type="file"],
+input[type="number"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #f9fafb;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+input[type="file"]:hover,
+input[type="number"]:focus {
+  border-color: #007bff;
+  background-color: #f0f7ff;
+  outline: none;
+}
+
+.report-btn {
+  display: block;
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  background: linear-gradient(135deg, #155E75, #40adc6);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.report-btn:hover {
+  background: linear-gradient(135deg, #0f3e4d, #155E75);
+  transform: translateY(-1px);
+}
+
+.report-btn:disabled {
+  background: #a0a0a0;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.message-wrapper {
+  min-height: 50px; /* biar layout stabil */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.success,
+.error {
+  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 8px;
+  animation: fadeIn 0.3s ease-in-out;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.success {
+  background-color: #e6f9ee;
+  color: #0a7a36;
+  border-left: 4px solid #2ecc71;
+}
+
+.error {
+  background-color: #fdeaea;
+  color: #b71c1c;
+  border-left: 4px solid #e74c3c;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
