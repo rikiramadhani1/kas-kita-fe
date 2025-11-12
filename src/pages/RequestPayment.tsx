@@ -32,6 +32,7 @@ export default function RequestPayment() {
 
       if (res.data.meta?.success) {
         setSummary(res.data.data);
+        setMessageType("success");
       } else {
         setMessage(res.data.meta?.message || "Gagal memuat data pembayaran");
         setMessageType("error");
@@ -82,7 +83,6 @@ const [file, setFile] = useState<File | null>(null);
 
 const handleConfirm = async () => {
   if (!file) return alert("Silakan upload bukti pembayaran terlebih dahulu");
-
   setLoading(true);
   setMessage("");
 
@@ -101,6 +101,7 @@ const handleConfirm = async () => {
       setMessage(
         `${meta.message}. Nominal Rp${data.nominal?.toLocaleString()} untuk ${data.months} bulan.`
       );
+      setMessageType("success")
       await fetchSummary();
     } else {
       setMessage(meta?.message || "Gagal mengirim konfirmasi");
