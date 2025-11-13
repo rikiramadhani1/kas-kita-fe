@@ -79,6 +79,7 @@ export default function Profile() {
   };
 
   return (
+<div className="page-container">
     <div className="profile">
       <h2 className="friendly-title">Profil Anggota</h2>
 
@@ -130,6 +131,7 @@ export default function Profile() {
           </p>
         )}
       </div>
+    </div>
     </div>
   );
 }

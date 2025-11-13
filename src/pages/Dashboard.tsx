@@ -75,6 +75,7 @@ export default function Dashboard() {
   }, [selectedYear]);
 
   return (
+    <div className="page-container">
     <div className="dashboard">
       {/* ==== SALDO ==== */}
       <div className="saldo-container">
@@ -154,6 +155,7 @@ export default function Dashboard() {
           ))
         )}
       </div>
+    </div>
     </div>
   );
 }

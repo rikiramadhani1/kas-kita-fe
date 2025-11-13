@@ -1,5 +1,12 @@
-// dengan logging
 import axios from "axios";
+
+// ==== Tambah type custom biar skipAuthRefresh bisa diterima oleh Axios ====
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    skipAuthRefresh?: boolean;
+    _retry?: boolean;
+  }
+}
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -14,10 +21,13 @@ api.interceptors.request.use(
     const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log("[API] Using accessToken:", token.slice(0, 20) + "..."); // log sebagian token
+      console.log("[API] Using accessToken:", token.slice(0, 20) + "...");
     } else {
       console.warn("[API] No accessToken found in localStorage");
     }
+
+    // Logging endpoint dan method
+    console.log(`[API] Request → ${config.method?.toUpperCase()} ${config.url}`);
     return config;
   },
   (error) => Promise.reject(error)
@@ -37,9 +47,21 @@ const processQueue = (error: any, token: string | null = null) => {
 
 // ==== Interceptor Response ====
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(
+      `[API] Response ← ${response.config.method?.toUpperCase()} ${
+        response.config.url
+      } (${response.status})`
+    );
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
+
+    // 🚫 Abaikan interceptor kalau flag skipAuthRefresh aktif
+    if (originalRequest?.skipAuthRefresh) {
+      return Promise.reject(error);
+    }
 
     // Deteksi token kadaluarsa
     if (error.response?.status === 403 && !originalRequest._retry) {
@@ -70,19 +92,23 @@ api.interceptors.response.use(
       }
 
       try {
-        console.log("[API] Calling /auth/refresh-token...");
-        const res = await axios.post("http://localhost:3001/api/auth/token", {
-          refreshToken,
-        });
+        console.log("[API] Calling /auth/token to refresh...");
+        // ✅ pakai api.post agar consistent dan tetap kena baseURL
+        const res = await api.post(
+          "/auth/token",
+          { refreshToken },
+          { skipAuthRefresh: true } // biar gak masuk interceptor lagi
+        );
 
-        console.log("[API] Refresh success:", res.data);
-        const newAccessToken = res.data.data.accessToken;
+        const newAccessToken = res.data?.data?.accessToken;
+        console.log("[API] Refresh success:", newAccessToken?.slice(0, 20) + "...");
         localStorage.setItem("accessToken", newAccessToken);
 
         api.defaults.headers.common.Authorization = "Bearer " + newAccessToken;
         processQueue(null, newAccessToken);
 
         console.log("[API] Retrying original request with new token...");
+        originalRequest.headers.Authorization = "Bearer " + newAccessToken;
         return api(originalRequest);
       } catch (err) {
         console.error("[API] Refresh token failed:", err);

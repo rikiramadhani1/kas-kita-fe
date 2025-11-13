@@ -12,25 +12,19 @@ body, html {
   height: 100vh;
 }
 
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: #1e88e5;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  z-index: 10;
-}
-
 .content {
   flex: 1;
-  margin-top: 20px; /* kasih jarak supaya konten gak ketiban navbar */
-  padding: 10px;
+  margin-top: 20px;
+  padding: 16px;
   overflow-y: auto;
+}
+
+
+.page-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
 }

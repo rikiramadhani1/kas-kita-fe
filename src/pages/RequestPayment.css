@@ -1,6 +1,6 @@
 .request {
-  max-width: 100%;
   width: 100%;
+  max-width: 420px;
   margin: 40px auto;
   font-family: 'Segoe UI', sans-serif;
   color: #333;
@@ -9,18 +9,19 @@
   text-align: center;
 }
 
+/* ====== RESPONSIVE WIDTH ====== */
 @media (min-width: 360px) {
   .request {
     max-width: 360px;
     padding: 5px;
-    margin: 5px 0px;
+    margin: 5px 0;
     font-size: 0.9rem;
   }
 }
 
 @media (min-width: 480px) {
   .request {
-    max-width: 400px;          
+    max-width: 400px;
     margin: 20px auto;
     padding: 0 12px;
   }
@@ -40,6 +41,7 @@
   }
 }
 
+/* ====== TYPOGRAPHY ====== */
 .friendly-title {
   font-size: 1rem;
   font-weight: 600;
@@ -47,12 +49,12 @@
   color: #333;
 }
 
-/* Step Card */
+/* ====== STEP CARD ====== */
 .step-card {
   background: #fff;
   padding: 15px 20px;
   border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
   text-align: center;
 }
@@ -70,7 +72,7 @@
   color: #777;
 }
 
-/* Tab header */
+/* ====== TAB HEADER ====== */
 .tab-header {
   display: flex;
   gap: 10px;
@@ -89,28 +91,28 @@
   transition: all 0.3s;
 }
 
+.tab-header button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .tab-header button.active {
   background: linear-gradient(135deg, #155E75, #40adc6);
-
   color: #fff;
   border: none;
 }
 
-.tab-header button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* QR / ShopeePay content */
+/* ====== TAB CONTENT ====== */
 .tab-content {
   margin-top: 10px;
 }
 
-.qr-area, .shopeepay-area {
+.qr-area,
+.shopeepay-area {
   padding: 15px;
   border-radius: 12px;
   background: #fdfdfd;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .hint {
@@ -119,11 +121,12 @@
   margin-top: 8px;
 }
 
+/* ====== SUMMARY CARD ====== */
 .summary-card {
   background: #f5f8ff;
   padding: 16px;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
 }
 
@@ -137,6 +140,7 @@
   font-size: 15px;
 }
 
+/* ====== PAYMENT ====== */
 .payment-container {
   max-width: 400px;
   margin: 2rem auto;
@@ -174,6 +178,7 @@ input[type="number"]:focus {
   outline: none;
 }
 
+/* ====== BUTTON ====== */
 .report-btn {
   display: block;
   width: 100%;
@@ -202,8 +207,9 @@ input[type="number"]:focus {
   transform: none;
 }
 
+/* ====== MESSAGE ====== */
 .message-wrapper {
-  min-height: 50px; /* biar layout stabil */
+  min-height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -234,6 +240,7 @@ input[type="number"]:focus {
   border-left: 4px solid #e74c3c;
 }
 
+/* ====== ANIMATION ====== */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -244,4 +251,3 @@ input[type="number"]:focus {
     transform: translateY(0);
   }
 }
-
