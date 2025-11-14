@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import QRCard from "../components/QRCard";
 import api from "../service/api";
 import "./RequestPayment.css";
@@ -15,6 +15,8 @@ export default function RequestPayment() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error">("error");
   const [summary, setSummary] = useState<Summary | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const memberId = 15;
   const currentYear = new Date().getFullYear();
@@ -48,8 +50,6 @@ export default function RequestPayment() {
   }, []);
 
   /** === Handle konfirmasi pembayaran === */
-  const [file, setFile] = useState<File | null>(null);
-
   const handleConfirm = async () => {
     if (!file) return alert("Silakan upload bukti pembayaran terlebih dahulu");
     setLoading(true);
@@ -85,6 +85,11 @@ export default function RequestPayment() {
       setMessage(message);
       setMessageType("error");
     } finally {
+      // reset file input
+      setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
       setLoading(false);
     }
   };
@@ -183,6 +188,7 @@ export default function RequestPayment() {
           <h3>Step 2: Konfirmasi Pembayaran</h3>
           <label>Upload bukti pembayaran (JPG/PNG)</label>
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*"
             onChange={(e) => setFile(e.target.files?.[0] || null)}
