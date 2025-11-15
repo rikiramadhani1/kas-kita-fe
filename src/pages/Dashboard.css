@@ -227,3 +227,21 @@
   font-weight: 400;
   margin: 15px 0 8px;
 }
+
+.error-box {
+  display: flex;
+  gap: 10px;
+  background: #fff8e1;       
+  border: 1px solid #ffe28a; 
+  padding: 12px;
+  border-radius: 10px;
+  color: #8a6d00;
+  font-size: 14px;
+  align-items: flex-start;
+}
+
+.error-icon {
+  font-size: 20px;
+  line-height: 1;
+  margin-top: 2px;
+}

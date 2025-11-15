@@ -69,6 +69,26 @@ export default function Dashboard() {
         setTransactions(res.data.data || []);
       } catch (err) {
         console.error("Error transaksi:", err);
+
+        // TAMPILKAN PESAN DI HISTORY KETIKA SERVER OFF
+        setTransactions([
+          {
+            year: String(selectedYear),
+            month: "Informasi",
+            transactions: [
+              {
+                id: -1,
+                type: "out", // bebas, cuma biar render
+                source: "system",
+                amount: 0,
+                description:
+                  `Hai! Servernya lagi offline dulu ya 😊 \n
+                   Coba lagi di jam operasional: Senin, Rabu, Jumat 08.00–17.00.`,
+                created_at: new Date().toISOString()
+              }
+            ]
+          }
+        ]);
       }
     };
     fetchTransactions();
@@ -126,30 +146,52 @@ export default function Dashboard() {
               <h4>{group.month}</h4>
               <table className="table">
                 <tbody>
-                  {group.transactions.map((tx) => (
-                    <tr key={tx.id}>
-                      <td>
-                        <div>
-                          <strong>{tx.description}</strong>
-                          <br />
-                          <small>
-                            {new Date(tx.created_at).toLocaleDateString("id-ID", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })}
-                          </small>
-                        </div>
-                      </td>
-                      <td
-                        className={tx.type === "in" ? "plus" : "minus"}
-                        style={{ textAlign: "right" }}
-                      >
-                        {tx.type === "in" ? "+" : "-"} Rp {tx.amount.toLocaleString("id-ID")}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
+                  {group.transactions.map((tx) => {
+                    // ====== RENDER PESAN ERROR ======
+                    if (tx.id === -1) {
+                      return (
+                        <tr key="error-message">
+                          <td colSpan={2}>
+                            <div className="error-box">
+                              <span className="error-icon">⚠️</span>
+                              <div>
+                                <strong>{tx.description}</strong>
+                                <br />
+                                <small>{new Date(tx.created_at).toLocaleString("id-ID")}</small>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    }
+
+                    // ====== RENDER TRANSAKSI NORMAL ======
+                    return (
+                      <tr key={tx.id}>
+                        <td>
+                          <div>
+                            <strong>{tx.description}</strong>
+                            <br />
+                            <small>
+                              {new Date(tx.created_at).toLocaleDateString("id-ID", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              })}
+                            </small>
+                          </div>
+                        </td>
+                        <td
+                          className={tx.type === "in" ? "plus" : "minus"}
+                          style={{ textAlign: "right" }}
+                        >
+                          {tx.type === "in" ? "+" : "-"} Rp{" "}
+                          {tx.amount.toLocaleString("id-ID")}
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
               </table>
             </div>
           ))
