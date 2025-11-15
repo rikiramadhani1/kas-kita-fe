@@ -82,8 +82,8 @@ export default function Dashboard() {
                 source: "system",
                 amount: 0,
                 description:
-                  `Hai! Servernya lagi offline dulu ya 😊\n
-                   Coba lagi di jam operasional:\n
+                  `Hai! Servernya lagi offline dulu ya 😊
+                   Coba lagi di jam operasional:
                    Senin-Jumat 09.00–17.00.`,
                 created_at: new Date().toISOString()
               }
@@ -155,7 +155,7 @@ export default function Dashboard() {
                           <td colSpan={2}>
                             <div className="error-box">
                               <span className="error-icon">⚠️</span>
-                              <div>
+                              <div style={{ whiteSpace: "pre-line" }}>
                                 <strong>{tx.description}</strong>
                                 <br />
                                 <small>{new Date(tx.created_at).toLocaleString("id-ID")}</small>
