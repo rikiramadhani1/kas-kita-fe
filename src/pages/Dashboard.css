@@ -240,6 +240,12 @@
   align-items: flex-start;
 }
 
+.error-box strong {
+  display: block;
+  text-align: justify;
+  white-space: pre-line;
+}
+
 .error-icon {
   font-size: 20px;
   line-height: 1;

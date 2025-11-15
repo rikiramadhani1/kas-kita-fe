@@ -155,11 +155,9 @@ export default function Dashboard() {
                           <td colSpan={2}>
                             <div className="error-box">
                               <span className="error-icon">⚠️</span>
-                              <div style={{ whiteSpace: "pre-line" }}>
                                 <strong>{tx.description}</strong>
                                 <br />
                                 <small>{new Date(tx.created_at).toLocaleString("id-ID")}</small>
-                              </div>
                             </div>
                           </td>
                         </tr>
