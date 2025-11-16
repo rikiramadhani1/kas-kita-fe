@@ -112,7 +112,7 @@ export default function DashboardAdmin() {
 
       {/* List of Unpaid Members */}
       <section className="admin-card">
-        <h2>List Member (Bulan Belum Bayar)</h2>
+        <h2>List Member Belum Bayar</h2>
         {error && <div className="error-box">{error}</div>}
         <table className="member-table">
           <thead>
@@ -126,7 +126,7 @@ export default function DashboardAdmin() {
             {unpaidMembers.map((member, index) => (
               <tr key={member.phone} className={index % 2 === 0 ? "even" : "odd"}>
                 <td>{member.name}</td>
-                <td>{member.hous}</td>
+                <td>{member.house_number}</td>
                 <td>{member.unpaid} bulan</td>
               </tr>
             ))}
