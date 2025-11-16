@@ -1,24 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // import icon dari react-icons
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./Login.css";
 
-export default function Login() {
+export default function LoginMember() {
   const navigate = useNavigate();
   const { isLoggedIn, login } = useAuth();
   const [phone, setPhone] = useState("");
   const [pin, setPin] = useState("");
+  const [showPin, setShowPin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showPin, setShowPin] = useState(false); // 🔹 state untuk toggle PIN
 
   const isFormValid = phone.trim() !== "" && pin.trim() !== "";
 
   useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/", { replace: true });
-    }
+    if (isLoggedIn) navigate("/", { replace: true });
   }, [isLoggedIn, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -29,11 +27,10 @@ export default function Login() {
     setError("");
 
     try {
-      await login(phone, pin);
+      await login(phone, pin, false); // isAdmin = false
       navigate("/", { replace: true });
     } catch (err: any) {
-      console.error("Login gagal:", err);
-      setError(err.message || "Login gagal, cek nomor dan PIN.");
+      setError(err.message || "Login member gagal.");
     } finally {
       setLoading(false);
     }
@@ -55,7 +52,7 @@ export default function Login() {
 
           <div className="pin-wrapper">
             <input
-              type={showPin ? "text" : "password"} // 🔹 toggle type
+              type={showPin ? "text" : "password"}
               placeholder="PIN"
               value={pin}
               onChange={(e) => setPin(e.target.value)}

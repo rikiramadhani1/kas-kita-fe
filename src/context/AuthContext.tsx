@@ -5,7 +5,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   loading: boolean;
   user: any;
-  login: (phone: string, pin: string) => Promise<void>;
+  login: (identifier: string, secret: string, isAdmin?: boolean) => Promise<void>;
   logout: () => void;
 }
 
@@ -16,28 +16,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // Load token + user di awal
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     setIsLoggedIn(!!token);
+
+    const storedUser = localStorage.getItem("user");
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch {
+        localStorage.removeItem("user");
+      }
+    }
+
     setLoading(false);
   }, []);
 
-  const login = async (phone: string, pin: string) => {
+  const login = async (
+    identifier: string,
+    secret: string,
+    isAdmin: boolean = false
+  ) => {
     try {
-      localStorage.clear(); // hapus token lama
+      localStorage.clear();
 
-      const res = await api.post("/auth", { phone, pin });
+      const endpoint = isAdmin ? "/auth/admin" : "/auth";
+      const payload = isAdmin
+        ? { email: identifier, password: secret }
+        : { phone: identifier, pin: secret };
 
-      console.log("🔥 LOGIN RESPONSE:", res.data); // tambahkan ini
-      
-      const { accessToken, refreshToken } = res.data.data;
+      const res = await api.post(endpoint, payload);
 
-      // simpan token
+      const { accessToken, refreshToken, user: userDataFromAPI } = res.data.data;
+
+      // simpan token & user
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("user", JSON.stringify(userDataFromAPI));
+      setUser(userDataFromAPI);
 
       setIsLoggedIn(true);
-      setUser(res.data.data.user || null);
     } catch (err: any) {
       throw new Error(err.response?.data?.meta?.message || "Login gagal");
     }
@@ -56,10 +75,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 };
-
 

@@ -1,0 +1,297 @@
+.admin-container h1 {
+  font-size: 1.1rem; /* Ukuran setara h4 */
+  font-weight: 600;  /* Sesuaikan dengan style sebelumnya */
+  margin-bottom: 15px; /* Optional, supaya jarak tetap rapi */
+}
+
+/* Tabel Member */
+.member-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.member-table th, .member-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.member-table th {
+  background-color: #f7f7f7;
+  font-weight: bold;
+}
+
+.member-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.member-table tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.member-table button {
+  background: linear-gradient(135deg, #155e75, #40adc6);
+  color: white;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.member-table button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Admin Container with Profile Layout */
+.admin-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 40px auto;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background: #fdfdfd;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Admin Card for Sections */
+.admin-card {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Kas Fields Section */
+.kas-fields label {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  display: block;
+  text-align: left;
+}
+
+.kas-fields input,
+.kas-fields select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 15px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #f7f7f7;
+}
+
+.kas-fields button {
+  background: linear-gradient(135deg, #155E75, #40adc6);
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.kas-fields button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Form Elements (Inputs, Selects, and Buttons) */
+.pin-input {
+  background: #f7f7f7;
+  color: black;
+  width: 80%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.pin-input:focus {
+  border-color: #f6d365;
+  box-shadow: 0 0 8px rgba(246, 211, 101, 0.5);
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #155E75, #40adc6);
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.reset-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .admin-card {
+    padding: 12px;
+  }
+}
+
+/* Tabel Aktivitas Member */
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.activity-table th, .activity-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.activity-table th {
+  background-color: #f7f7f7;
+  font-weight: bold;
+}
+
+.activity-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.activity-table tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.activity-table button {
+  background: linear-gradient(135deg, #155e75, #40adc6);
+  color: white;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.activity-table button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Admin Container with Profile Layout */
+.admin-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 40px auto;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background: #fdfdfd;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Admin Card for Sections */
+.admin-card {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.admin-card h2 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.kas-fields input,
+.kas-fields select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 15px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #f7f7f7;
+}
+
+.kas-fields button {
+  background: linear-gradient(135deg, #155E75, #40adc6);
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.kas-fields button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Form Elements (Inputs, Selects, and Buttons) */
+.pin-input {
+  background: #f7f7f7;
+  color: black;
+  width: 80%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.pin-input:focus {
+  border-color: #f6d365;
+  box-shadow: 0 0 8px rgba(246, 211, 101, 0.5);
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #155E75, #40adc6);
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.reset-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .admin-card {
+    padding: 12px;
+  }
+}
