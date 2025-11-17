@@ -112,12 +112,12 @@ export default function DashboardAdmin() {
 
       {/* List of Unpaid Members */}
       <section className="admin-card">
-        <h2>List Member Belum Bayar</h2>
+        <h2>Daftar Anggota Belum Bayar</h2>
         {error && <div className="error-box">{error}</div>}
         <table className="member-table">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Nama</th>
               <th>Rumah</th>
               <th>Belum Bayar</th>
             </tr>
@@ -136,7 +136,7 @@ export default function DashboardAdmin() {
 
       {/* Add Kas */}
       <section className="admin-card">
-        <h2>Add Kas</h2>
+        <h2>Tambah Kas</h2>
         <div className="kas-fields">
           {/* Dropdown for Type */}
           <label>
@@ -146,8 +146,8 @@ export default function DashboardAdmin() {
               onChange={(e) => setKasType(e.target.value)}
               className="pin-input"
             >
-              <option value="in">In</option>
-              <option value="out">Out</option>
+              <option value="in">Masuk</option>
+              <option value="out">Keluar</option>
             </select>
           </label>
 
@@ -159,9 +159,9 @@ export default function DashboardAdmin() {
               onChange={(e) => setKasSource(e.target.value)}
               className="pin-input"
             >
-              <option value="dues">Dues</option>
-              <option value="donation">Donation</option>
-              <option value="other">Other</option>
+              <option value="expense">Pengeluaran</option>
+              <option value="income">Pemasukan</option>
+              <option value="dues">Iuran</option>
             </select>
           </label>
 
@@ -191,22 +191,22 @@ export default function DashboardAdmin() {
 
           {/* Submit Button */}
           <button onClick={addKas} className="reset-btn">
-            Tambah Iuran Manual
+            Tambah Kas
           </button>
         </div>
       </section>
 
       {/* Monitoring Activity Member */}
       <section className="admin-card">
-        <h2>Monitoring Activity Member</h2>
+        <h2>Monitoring Aktivitas Anggota</h2>
         {error && <div className="error-box">{error}</div>}
         <table className="activity-table">
           <thead>
             <tr>
-              <th>Member Name</th>
-              <th>Action</th>
-              <th>Features</th>
-              <th>Action Count</th>
+              <th>Nama</th>
+              <th>Aksi</th>
+              <th>Fitur</th>
+              <th>Banyaknya</th>
             </tr>
           </thead>
           <tbody>
@@ -230,17 +230,17 @@ export default function DashboardAdmin() {
 
       {/* Set PIN Member */}
       <section className="admin-card">
-        <h2>Set PIN Member</h2>
+        <h2>Set PIN Anggota</h2>
 
         {/* Dropdown pilih member */}
         <label>
-          Pilih Member:
+          Pilih Anggota:
           <select
             value={selectedMemberId || ""}
             onChange={(e) => setSelectedMemberId(Number(e.target.value))}
             className="pin-input"
           >
-            <option value="">-- Pilih Member --</option>
+            <option value="">-- Pilih Anggota --</option>
             {members.map((member) => (
               <option key={member.id} value={member.id}>
                 {member.name} ({member.house_number})
