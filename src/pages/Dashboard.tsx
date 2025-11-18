@@ -84,7 +84,9 @@ export default function Dashboard() {
                 description:
                   `Hai! Servernya lagi offline dulu ya 😊
                    Coba lagi di jam operasional:
-                   Senin-Jumat 09.00-17.00.`,
+                   Senin-Jumat 09.00-17.00. 
+
+                   Tarik ke bawah untuk muat ulang (reload)`,
                 created_at: new Date().toISOString()
               }
             ]
