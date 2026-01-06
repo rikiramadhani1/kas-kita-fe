@@ -21,8 +21,9 @@ export default function Dashboard() {
   const [saldoBulanIni, setSaldoBulanIni] = useState<number>(0);
   const [saldoTotal, setSaldoTotal] = useState<number>(0);
   const [transactions, setTransactions] = useState<MonthlyTransactions[]>([]);
-  const [selectedYear, setSelectedYear] = useState<number>(2025);
-  const years = [2025, 2026];
+  const currentYear = new Date().getFullYear();
+  const years = [currentYear - 1, currentYear];
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
