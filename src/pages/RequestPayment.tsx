@@ -184,7 +184,7 @@ export default function RequestPayment() {
 
         {/* === STEP 1: QRIS saja === */}
         <div className="step-card">
-          <h3>Step 1: Salin No. Rekening Bendahara</h3>
+          <h3>Step 1: Transfer melalui Nomor rekening bendahara</h3>
           <p className="note">Besar iuran: Rp 20.000/bulan</p>
           <div className="qr-area">
               <QRCard qrUrl="/image_card.png" />
@@ -193,7 +193,7 @@ export default function RequestPayment() {
                   <span>Salin No. Rekening</span>
               </button>
           </div>
-            {showToast && (<div className="toast-success">✅ No. Rekening berhasil disalin</div>)}
+            {showToast}
         </div>
 
         {/* === STEP 2: Konfirmasi === */}
