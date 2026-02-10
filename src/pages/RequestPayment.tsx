@@ -21,6 +21,18 @@ export default function RequestPayment() {
   const memberId = 15;
   const currentYear = new Date().getFullYear();
 
+  const NO_REKENING = "901451286249";
+  const [showToast, setShowToast] = useState(false);
+
+  const handleCopyRek = async () => {
+    await navigator.clipboard.writeText(NO_REKENING);
+    setShowToast(true);
+
+    setTimeout(() => {
+      setShowToast(false);
+    }, 2000);
+  };
+
   /** === Fetch summary pembayaran === */
   const fetchSummary = async () => {
     try {
@@ -172,15 +184,16 @@ export default function RequestPayment() {
 
         {/* === STEP 1: QRIS saja === */}
         <div className="step-card">
-          <h3>Step 1: Scan QRIS Pembayaran</h3>
+          <h3>Step 1: Salin No. Rekening Bendahara</h3>
           <p className="note">Besar iuran: Rp 20.000/bulan</p>
-
           <div className="qr-area">
-            <div className="qr-inner-card">
-              <QRCard qrUrl="/qris.png" />
-              <p className="hint">QRIS Statis Bendahara</p>
-            </div>
+              <QRCard qrUrl="/image_card.png" />
+              <button className="hint copy-rek" onClick={handleCopyRek}>
+                  <span className="copy-icon" />
+                  <span>Salin No. Rekening</span>
+              </button>
           </div>
+            {showToast && (<div className="toast-success">✅ No. Rekening berhasil disalin</div>)}
         </div>
 
         {/* === STEP 2: Konfirmasi === */}
