@@ -58,30 +58,6 @@ const memberId = token
     }, 2000);
   };
 
-  /** === Fetch summary pembayaran === */
-  const fetchSummary = async () => {
-    try {
-      console.log("[UI] Fetching summary...");
-      const res = await api.get(`/payments/count`, {
-        params: { member_id: memberId, year: currentYear },
-      });
-
-      console.log("[UI] Summary response:", res.data);
-
-      if (res.data.meta?.success) {
-        setSummary(res.data.data);
-        setMessageType("success");
-      } else {
-        setMessage(res.data.meta?.message || "Gagal memuat data pembayaran");
-        setMessageType("error");
-      }
-    } catch (err) {
-      console.error("[UI] Failed to load summary", err);
-      setMessage("Gagal memuat data pembayaran");
-      setMessageType("error");
-    }
-  };
-
   const fetchMonthlySummary = async () => {
   try {
     const now = new Date();
