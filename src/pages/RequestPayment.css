@@ -301,3 +301,63 @@ input[type="number"]:focus {
   left: -2px;
   background: white;
 }
+
+/* ===== SALDO CARD ===== */
+.saldo-card {
+  background: linear-gradient(135deg, #155E75, #40adc6);
+  color: white;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.saldo-card h3 {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.saldo-amount {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.saldo-meta {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+/* ===== MEMBER LIST ===== */
+.member-list-card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+.member-list-card h3 {
+  margin-bottom: 12px;
+}
+
+.member-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.95rem;
+}
+
+.member-row span:last-child {
+  font-weight: 600;
+}
+
+.total-row {
+  font-weight: bold;
+}
+
+.divider {
+  height: 1px;
+  background: #eee;
+  margin: 10px 0;
+}

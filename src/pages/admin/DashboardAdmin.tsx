@@ -1,101 +1,79 @@
 import { useEffect, useState } from "react";
-import api from "../../service/api"; // Import axios instance yang sudah dikonfigurasi
+import api from "../../service/api";
+import { jwtDecode } from "jwt-decode";
 import "./DashboardAdmin.css";
 
 export default function DashboardAdmin() {
   const [members, setMembers] = useState<any[]>([]);
   const [activityData, setActivityData] = useState<any[]>([]);
-  const [wau, setWau] = useState(0); // WAU (Weekly Active Users)
+  const [wau, setWau] = useState(0);
   const [error, setError] = useState<string>("");
 
-  // State untuk Add Kas
+  const [monthlySummary, setMonthlySummary] = useState<any>(null);
+  const [adminId, setAdminId] = useState<number | null>(null);
+
+  // State Add Kas
   const [kasType, setKasType] = useState<string>("in");
   const [kasSource, setKasSource] = useState<string>("dues");
   const [kasAmount, setKasAmount] = useState<number>(0);
   const [kasDescription, setKasDescription] = useState<string>("");
+
   const [newAdminEmail, setNewAdminEmail] = useState<string>("");
-  const [unpaidMembers, setUnpaidMembers] = useState<any[]>([]);
   const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null);
 
+  // ================= DECODE TOKEN =================
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
 
-  // Fetch Members
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        setAdminId(decoded.id); // sesuai payload kamu
+      } catch (err) {
+        console.error("Invalid token");
+      }
+    }
+  }, []);
+
+  // ================= FETCH DATA =================
+
   const fetchMembers = async () => {
     try {
-      const response = await api.get("/members");
-      setMembers(response.data.data);
-    } catch (err) {
+      const res = await api.get("/members");
+      setMembers(res.data.data);
+    } catch {
       setError("Failed to fetch members");
     }
   };
 
-  // Fetch Actions (Activity)
   const fetchActivities = async () => {
     try {
-      const response = await api.get("/analytics/action");
-      setActivityData(response.data.data);
-    } catch (err) {
+      const res = await api.get("/analytics/action");
+      setActivityData(res.data.data);
+    } catch {
       setError("Failed to fetch activity data");
     }
   };
 
-  // Fetch Weekly Active Users (WAU) - Placeholder
   const fetchWau = async () => {
-    setWau(43); // Placeholder value, should come from an actual API if available
+    setWau(43);
   };
 
-  // Set PIN for Member
-  const setPinForMember = async (memberId: number) => {
+  const fetchMonthlySummary = async () => {
     try {
-      const response = await api.post(`/auth/members/${memberId}/pin`);
-      alert(`${response.data.data} - Set PIN sukses!`);
+      const now = new Date();
+      const res = await api.get("/cashflow/summary", {
+        params: {
+          month: now.getMonth() + 1,
+          year: now.getFullYear(),
+        },
+      });
+
+      if (res.data.meta?.success) {
+        setMonthlySummary(res.data.data);
+      }
     } catch (err) {
-      alert("Failed to set PIN");
-    }
-  };
-
-  // Add Admin
-  const addAdmin = async (email: string) => {
-    try {
-      const response = await api.post("/admin/register", { email });
-      alert(`${response.data.data.email} - Admin added successfully!`);
-      setNewAdminEmail(""); // Clear email input
-    } catch (err) {
-      alert("Failed to add admin");
-    }
-  };
-
-  // Add Kas (Cash Flow)
-  const addKas = async () => {
-    if (kasAmount <= 0 || !kasDescription) {
-      alert("Pastikan jumlah dan deskripsi iuran sudah diisi.");
-      return;
-    }
-
-    const kasData = {
-      type: kasType,
-      source: kasSource,
-      amount: kasAmount,
-      description: kasDescription
-    };
-
-    try {
-      await api.post("/cashflow/", kasData);
-      alert("Kas berhasil ditambahkan!");
-      setKasAmount(0); // Clear after submission
-      setKasDescription(""); // Clear description
-    } catch (err) {
-      alert("Failed to add Kas");
-    }
-  };
-
-  // Fetch Unpaid Members
-  const fetchUnpaidMembers = async () => {
-    try {
-      const response = await api.get("/payments/unpaid"); // Panggil endpoint baru
-      console.log("responseeeeeee", response)
-      setUnpaidMembers(response.data.data); // Ambil data unpaid members
-    } catch (err) {
-      setError("Failed to fetch unpaid members");
+      console.error("Failed to fetch monthly summary", err);
     }
   };
 
@@ -103,182 +81,263 @@ export default function DashboardAdmin() {
     fetchMembers();
     fetchActivities();
     fetchWau();
-    fetchUnpaidMembers();
+    fetchMonthlySummary();
   }, []);
+
+  // ================= TAMBAH CASH MEMBER =================
+
+  const addCashMember = async (memberId: number) => {
+    const nominal = prompt("Masukkan nominal kas:");
+
+    if (!nominal || Number(nominal) <= 0) {
+      alert("Nominal tidak valid");
+      return;
+    }
+
+    try {
+      await api.post("/payments/request", {
+        member_id: memberId,
+        total_amount: Number(nominal),
+      });
+
+      alert("Kas member berhasil ditambahkan!");
+      fetchMonthlySummary();
+    } catch {
+      alert("Gagal menambahkan kas member");
+    }
+  };
+
+  // ================= TAMBAH KAS GLOBAL =================
+
+  const addKas = async () => {
+    if (kasAmount <= 0 || !kasDescription) {
+      alert("Pastikan jumlah dan deskripsi iuran sudah diisi.");
+      return;
+    }
+
+    try {
+      await api.post("/cashflow/", {
+        type: kasType,
+        source: kasSource,
+        total_amount: kasAmount,
+        description: kasDescription,
+      });
+
+      alert("Kas berhasil ditambahkan!");
+      setKasAmount(0);
+      setKasDescription("");
+      fetchMonthlySummary();
+    } catch {
+      alert("Failed to add Kas");
+    }
+  };
+
+  // ================= SET PIN =================
+
+  const setPinForMember = async (memberId: number) => {
+    try {
+      const res = await api.post(`/auth/members/${memberId}/pin`);
+      alert(`${res.data.data} - Set PIN sukses!`);
+    } catch {
+      alert("Failed to set PIN");
+    }
+  };
+
+  // ================= TAMBAH ADMIN =================
+
+  const addAdmin = async (email: string) => {
+    try {
+      const res = await api.post("/admin/register", { email });
+      alert(`${res.data.data.email} - Admin added successfully!`);
+      setNewAdminEmail("");
+    } catch {
+      alert("Failed to add admin");
+    }
+  };
 
   return (
     <div className="admin-container profile">
       <h1>Admin Control Panel</h1>
 
-      {/* List of Unpaid Members */}
+      {/* ================= KONTRIBUSI MEMBER ================= */}
       <section className="admin-card">
-        <h2>Daftar Anggota Belum Bayar</h2>
-        {error && <div className="error-box">{error}</div>}
-        <table className="member-table">
-          <thead>
-            <tr>
-              <th>Nama</th>
-              <th>Rumah</th>
-              <th>Belum Bayar</th>
-            </tr>
-          </thead>
-          <tbody>
-            {unpaidMembers.map((member, index) => (
-              <tr key={member.phone} className={index % 2 === 0 ? "even" : "odd"}>
-                <td>{member.name}</td>
-                <td>{member.house_number}</td>
-                <td>{member.unpaid} bulan</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+  <h2>Kontribusi Member</h2>
 
-      {/* Add Kas */}
+  {monthlySummary && (
+    <div className="member-list-card">
+
+      {/* MEMBER YANG SUDAH BAYAR */}
+      {members.map((member: any) => {
+        const found = monthlySummary.members.find(
+          (m: any) => m.member_id === member.id
+        );
+
+        const totalPaid = found ? found.total_paid : 0;
+
+        return (
+          <div
+            key={member.id}
+            className={`member-row ${totalPaid === 0 ? "unpaid" : ""}`}
+          >
+            <span>{member.name}</span>
+
+            <span>
+              Rp {totalPaid.toLocaleString("id-ID")}
+            </span>
+
+            <button
+              className="reset-btn"
+              onClick={() => addCashMember(member.id)}
+            >
+              Tambah Cash
+            </button>
+          </div>
+        );
+      })}
+
+      <div className="divider" />
+
+      <div className="member-row total-row">
+        <span>Total Kas Masuk</span>
+        <span>
+          Rp {monthlySummary.total_in.toLocaleString("id-ID")}
+        </span>
+      </div>
+
+      <div className="member-row total-row">
+        <span>Saldo</span>
+        <span>
+          Rp {monthlySummary.saldo.toLocaleString("id-ID")}
+        </span>
+      </div>
+    </div>
+  )}
+</section>
+
+      {/* ================= TAMBAH KAS ================= */}
       <section className="admin-card">
         <h2>Tambah Kas</h2>
-        <div className="kas-fields">
-          {/* Dropdown for Type */}
-          <label>
-            Type:
-            <select
-              value={kasType}
-              onChange={(e) => setKasType(e.target.value)}
-              className="pin-input"
-            >
-              <option value="in">Masuk</option>
-              <option value="out">Keluar</option>
-            </select>
-          </label>
 
-          {/* Dropdown for Source */}
-          <label>
-            Source:
-            <select
-              value={kasSource}
-              onChange={(e) => setKasSource(e.target.value)}
-              className="pin-input"
-            >
-              <option value="expense">Pengeluaran</option>
-              <option value="income">Pemasukan</option>
-              <option value="dues">Iuran</option>
-            </select>
-          </label>
-
-          {/* Amount Field */}
-          <label>
-            Amount:
-            <input
-              type="number"
-              placeholder="Jumlah Iuran"
-              value={kasAmount}
-              onChange={(e) => setKasAmount(Number(e.target.value))}
-              className="pin-input"
-            />
-          </label>
-
-          {/* Description Field */}
-          <label>
-            Description:
-            <input
-              type="text"
-              placeholder="Deskripsi Iuran"
-              value={kasDescription}
-              onChange={(e) => setKasDescription(e.target.value)}
-              className="pin-input"
-            />
-          </label>
-
-          {/* Submit Button */}
-          <button onClick={addKas} className="reset-btn">
-            Tambah Kas
-          </button>
-        </div>
-      </section>
-
-      {/* Monitoring Activity Member */}
-      <section className="admin-card">
-        <h2>Monitoring Aktivitas Anggota</h2>
-        {error && <div className="error-box">{error}</div>}
-        <table className="activity-table">
-          <thead>
-            <tr>
-              <th>Nama</th>
-              <th>Aksi</th>
-              <th>Fitur</th>
-              <th>Banyaknya</th>
-            </tr>
-          </thead>
-          <tbody>
-            {activityData.map((activity, index) => (
-              <tr key={activity.id_member} className={index % 2 === 0 ? "even" : "odd"}>
-                <td>{activity.nama_member}</td>
-                <td>{activity.action}</td>
-                <td>{[...new Set(activity.feature)].join(", ")}</td> {/* Hanya tampilkan fitur unik */}
-                <td>{activity.count}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-
-      {/* WAU (Weekly Active Users) */}
-      <section className="admin-card">
-        <h2>WAU (Weekly Active User)</h2>
-        <p>{wau} Users aktif minggu ini</p>
-      </section>
-
-      {/* Set PIN Member */}
-      <section className="admin-card">
-        <h2>Set PIN Anggota</h2>
-
-        {/* Dropdown pilih member */}
-        <label>
-          Pilih Anggota:
-          <select
-            value={selectedMemberId || ""}
-            onChange={(e) => setSelectedMemberId(Number(e.target.value))}
-            className="pin-input"
-          >
-            <option value="">-- Pilih Anggota --</option>
-            {members.map((member) => (
-              <option key={member.id} value={member.id}>
-                {member.name} ({member.house_number})
-              </option>
-            ))}
-          </select>
-        </label>
-
-        {/* Tombol Set PIN */}
-        <button
-          onClick={() => {
-            if (!selectedMemberId) {
-              alert("Pilih member terlebih dahulu!");
-              return;
-            }
-            setPinForMember(selectedMemberId);
-          }}
-          className="reset-btn"
+        <select
+          value={kasType}
+          onChange={(e) => setKasType(e.target.value)}
+          className="pin-input"
         >
-          Set PIN
-        </button>
-      </section>
+          <option value="in">Masuk</option>
+          <option value="out">Keluar</option>
+        </select>
 
+        <select
+          value={kasSource}
+          onChange={(e) => setKasSource(e.target.value)}
+          className="pin-input"
+        >
+          <option value="expense">Pengeluaran</option>
+          <option value="income">Pemasukan</option>
+          <option value="dues">Iuran</option>
+        </select>
 
-      {/* Add Admin */}
-      <section className="admin-card">
-        <h2>Tambah Admin</h2>
         <input
-          type="email"
-          placeholder="Email Admin Baru"
-          value={newAdminEmail}
-          onChange={(e) => setNewAdminEmail(e.target.value)}
+          type="number"
+          placeholder="Jumlah"
+          value={kasAmount}
+          onChange={(e) => setKasAmount(Number(e.target.value))}
           className="pin-input"
         />
-        <button onClick={() => addAdmin(newAdminEmail)} className="reset-btn">
-          Tambah Admin
+
+        <input
+          type="text"
+          placeholder="Deskripsi"
+          value={kasDescription}
+          onChange={(e) => setKasDescription(e.target.value)}
+          className="pin-input"
+        />
+
+        <button onClick={addKas} className="reset-btn">
+          Tambah Kas
         </button>
       </section>
+
+      {/* ================= SUPER ADMIN ONLY ================= */}
+      {adminId === 1 && (
+        <>
+          <section className="admin-card">
+            <h2>Monitoring Aktivitas Anggota</h2>
+            <table className="activity-table">
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Aksi</th>
+                  <th>Fitur</th>
+                  <th>Banyaknya</th>
+                </tr>
+              </thead>
+              <tbody>
+                {activityData.map((activity, index) => (
+                  <tr key={activity.id_member}>
+                    <td>{activity.nama_member}</td>
+                    <td>{activity.action}</td>
+                    <td>{[...new Set(activity.feature)].join(", ")}</td>
+                    <td>{activity.count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
+
+          <section className="admin-card">
+            <h2>WAU</h2>
+            <p>{wau} Users aktif minggu ini</p>
+          </section>
+
+          <section className="admin-card">
+            <h2>Set PIN Anggota</h2>
+
+            <select
+              value={selectedMemberId || ""}
+              onChange={(e) => setSelectedMemberId(Number(e.target.value))}
+              className="pin-input"
+            >
+              <option value="">-- Pilih Anggota --</option>
+              {members.map((member) => (
+                <option key={member.id} value={member.id}>
+                  {member.name} ({member.house_number})
+                </option>
+              ))}
+            </select>
+
+            <button
+              onClick={() => {
+                if (!selectedMemberId) {
+                  alert("Pilih member terlebih dahulu!");
+                  return;
+                }
+                setPinForMember(selectedMemberId);
+              }}
+              className="reset-btn"
+            >
+              Set PIN
+            </button>
+          </section>
+
+          <section className="admin-card">
+            <h2>Tambah Admin</h2>
+            <input
+              type="email"
+              placeholder="Email Admin Baru"
+              value={newAdminEmail}
+              onChange={(e) => setNewAdminEmail(e.target.value)}
+              className="pin-input"
+            />
+            <button
+              onClick={() => addAdmin(newAdminEmail)}
+              className="reset-btn"
+            >
+              Tambah Admin
+            </button>
+          </section>
+        </>
+      )}
     </div>
   );
 }

@@ -6,7 +6,7 @@ interface Transaction {
   id: number;
   type: "in" | "out";
   source: string;
-  amount: number;
+  total_amount: number;
   description: string;
   created_at: string;
 }
@@ -81,7 +81,7 @@ export default function Dashboard() {
                 id: -1,
                 type: "out", // bebas, cuma biar render
                 source: "system",
-                amount: 0,
+                total_amount: 0,
                 description:
                   `Hai! Servernya lagi offline dulu ya 😊
                    Coba lagi di jam operasional:
@@ -190,7 +190,7 @@ export default function Dashboard() {
                           style={{ textAlign: "right" }}
                         >
                           {tx.type === "in" ? "+" : "-"} Rp{" "}
-                          {tx.amount.toLocaleString("id-ID")}
+                          {Number(tx.total_amount || 0).toLocaleString("id-ID")}
                         </td>
                       </tr>
                     );
