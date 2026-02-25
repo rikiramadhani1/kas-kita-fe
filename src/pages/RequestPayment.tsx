@@ -158,7 +158,7 @@ const memberId = token
           <h3>Step 1: Transfer melalui Nomor rekening bendahara</h3>
           <p className="note">Besar iuran: Rp 20.000/bulan</p>
           <div className="qr-area">
-              <QRCard qrUrl="/image_card.png" />
+              <QRCard qrUrl="/image_byr.png" />
               <button className="hint copy-rek" onClick={handleCopyRek}>
                   <span className="copy-icon" />
                   <span>Salin No. Rekening</span>
