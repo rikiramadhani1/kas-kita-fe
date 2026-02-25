@@ -46,7 +46,7 @@ const memberId = token
 );
   const currentYear = new Date().getFullYear();
 
-  const NO_REKENING = "901451286249";
+  const NO_REKENING = "082272206809";
   const [showToast, setShowToast] = useState(false);
 
   const handleCopyRek = async () => {
@@ -113,7 +113,7 @@ const memberId = token
   <>
     {/* CARD SALDO MEMBER */}
     <div className="saldo-card">
-      <h3>Kontribusi Kamu Bulan Ini</h3>
+      <h3>Kontribusi Awak Bulan Ini</h3>
       <div className="saldo-amount">
         Rp {(myData?.total_paid ?? 0).toLocaleString("id-ID")}
       </div>
@@ -124,7 +124,7 @@ const memberId = token
 
     {/* LIST MEMBER */}
     <div className="member-list-card">
-      <h3>Kontribusi Member</h3>
+      <h3>Kontribusi Orang-orang Sukses</h3>
 
       {monthlySummary.members.map((m) => (
         <div key={m.member_id} className="member-row">
@@ -155,8 +155,8 @@ const memberId = token
 )}
         {/* === STEP 1: QRIS saja === */}
         <div className="step-card">
-          <h3>Step 1: Transfer melalui Nomor rekening bendahara</h3>
-          <p className="note">Besar iuran: Rp 20.000/bulan</p>
+          <h4>Step 1: Transfer melalui Nomor Dana bendahara</h4>
+          <p className="note">Iuran kas suka hati kelen lah 😎💸. Mau gopek, seribu, goceng, cepek, paten kali lah, pokoknya tetep caer aja! Biar rame kayak pajak.</p>
           <div className="qr-area">
               <QRCard qrUrl="/image_byr.png" />
               <button className="hint copy-rek" onClick={handleCopyRek}>
