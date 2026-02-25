@@ -105,6 +105,51 @@ const memberId = token
     fetchMonthlySummary();
   }, []);
 
+   /** === Handle konfirmasi pembayaran === */
+  const handleConfirm = async () => {
+    if (!file) return alert("Silakan upload bukti pembayaran terlebih dahulu");
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const formData = new FormData();
+      formData.append("image_upload", file);
+
+      const res = await api.post("/payments/confirm", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const meta = res.data?.meta;
+      const data = res.data?.data;
+
+      if (meta?.success) {
+        setMessage(
+          `${meta.message}. Nominal Rp${data.nominal?.toLocaleString()} untuk ${data.months} bulan.`
+        );
+        setMessageType("success");
+        await fetchSummary();
+      } else {
+        setMessage(meta?.message || "Gagal mengirim konfirmasi");
+        setMessageType("error");
+      }
+    } catch (err: any) {
+      console.error("[PAYMENT CONFIRM ERROR]", err);
+      const message =
+        err.response?.data?.meta?.message ||
+        err.message ||
+        "Terjadi kesalahan saat mengirim konfirmasi";
+      setMessage(message);
+      setMessageType("error");
+    } finally {
+      // reset file input
+      setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="page-container">
       <div className="request">
@@ -113,7 +158,7 @@ const memberId = token
   <>
     {/* CARD SALDO MEMBER */}
     <div className="saldo-card">
-      <h3>Kontribusi Awak Bulan Ini</h3>
+      <h4>Kontribusi Awak Bulan Ini</h4>
       <div className="saldo-amount">
         Rp {(myData?.total_paid ?? 0).toLocaleString("id-ID")}
       </div>
@@ -124,7 +169,7 @@ const memberId = token
 
     {/* LIST MEMBER */}
     <div className="member-list-card">
-      <h3>Kontribusi Orang-orang Sukses</h3>
+      <h4>Kontribusi Orang-orang Sukses</h4>
 
       {monthlySummary.members.map((m) => (
         <div key={m.member_id} className="member-row">
@@ -143,13 +188,6 @@ const memberId = token
           Rp {monthlySummary.total_in.toLocaleString("id-ID")}
         </span>
       </div>
-
-      <div className="member-row total-row">
-        <span>Saldo</span>
-        <span>
-          Rp {monthlySummary.saldo.toLocaleString("id-ID")}
-        </span>
-      </div>
     </div>
   </>
 )}
@@ -165,6 +203,36 @@ const memberId = token
               </button>
           </div>
             {showToast}
+        </div>
+
+        {/* === STEP 2: Konfirmasi === */}
+        <div className="step-card">
+          <h4>Step 2: Konfirmasi Pembayaran</h4>
+          <label>Kelen taroklah screenshot transfer nya disini</label>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+          />
+
+          <button
+            className="report-btn"
+            onClick={handleConfirm}
+            disabled={loading}
+          >
+            {loading ? "Mengirim..." : "Kirim Konfirmasi"}
+          </button>
+
+          {message && (
+            <p
+              className={`message ${
+                messageType === "success" ? "success" : "error"
+              }`}
+            >
+              {message}
+            </p>
+          )}
         </div>
       </div>
     </div>
