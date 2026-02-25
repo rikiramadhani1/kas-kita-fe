@@ -208,7 +208,7 @@ const memberId = token
         {/* === STEP 2: Konfirmasi === */}
         <div className="step-card">
           <h4>Step 2: Konfirmasi Pembayaran</h4>
-          <label>Kelen taroklah screenshot transfer nya disini</label>
+          <label>Cak Kelen taroklah screenshot transfer nya disini</label>
           <input
             ref={fileInputRef}
             type="file"
