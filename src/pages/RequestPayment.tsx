@@ -77,7 +77,6 @@ const memberId = token
 };
 
   useEffect(() => {
-    fetchSummary();
     fetchMonthlySummary();
   }, []);
 
@@ -100,10 +99,9 @@ const memberId = token
 
       if (meta?.success) {
         setMessage(
-          `${meta.message}. Nominal Rp${data.nominal?.toLocaleString()} untuk ${data.months} bulan.`
+          `${meta.message}. Rp${data.nominal?.toLocaleString()} dikirimnya.`
         );
         setMessageType("success");
-        await fetchSummary();
       } else {
         setMessage(meta?.message || "Gagal mengirim konfirmasi");
         setMessageType("error");
