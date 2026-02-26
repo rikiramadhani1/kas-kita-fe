@@ -83,11 +83,11 @@ export default function Dashboard() {
                 source: "system",
                 total_amount: 0,
                 description:
-                  `Hai! Servernya lagi offline dulu ya 😊
-                   Coba lagi di jam operasional:
-                   Senin-Jumat 09.00-17.00. 
+                  `Halo! Servernya lagi offline dulu ya 😊
+                   Cak kesini lagi jam 09.00-17.00.
+                   Jadwal server hidup hari Senin-Jumat  
 
-                   Tarik ke bawah untuk muat ulang (reload)`,
+                   Tarik ke bawah biar keluar datanya`,
                 created_at: new Date().toISOString()
               }
             ]
