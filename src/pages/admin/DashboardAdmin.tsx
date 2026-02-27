@@ -12,10 +12,14 @@ export default function DashboardAdmin() {
   const [monthlySummary, setMonthlySummary] = useState<any>(null);
   const [adminId, setAdminId] = useState<number | null>(null);
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<any>(null);
+  const [amountInput, setAmountInput] = useState("");
+
   // State Add Kas
   const [kasType, setKasType] = useState<string>("in");
-  const [kasSource, setKasSource] = useState<string>("dues");
   const [kasAmount, setKasAmount] = useState<number>(0);
+  const [kasAmountDisplay, setKasAmountDisplay] = useState("");
   const [kasDescription, setKasDescription] = useState<string>("");
 
   const [newAdminEmail, setNewAdminEmail] = useState<string>("");
@@ -36,7 +40,6 @@ export default function DashboardAdmin() {
   }, []);
 
   // ================= FETCH DATA =================
-
   const fetchMembers = async () => {
     try {
       const res = await api.get("/members");
@@ -85,11 +88,11 @@ export default function DashboardAdmin() {
   }, []);
 
   // ================= TAMBAH CASH MEMBER =================
-
-  const addCashMember = async (memberId: number) => {
-    const nominal = prompt("Masukkan nominal kas:");
-
-    if (!nominal || Number(nominal) <= 0) {
+  const addCashMember = async (
+    memberId: number,
+    nominal: number
+  ) => {
+    if (!nominal || nominal <= 0) {
       alert("Nominal tidak valid");
       return;
     }
@@ -97,7 +100,7 @@ export default function DashboardAdmin() {
     try {
       await api.post("/payments/request", {
         member_id: memberId,
-        total_amount: Number(nominal),
+        total_amount: nominal,
       });
 
       alert("Kas member berhasil ditambahkan!");
@@ -108,7 +111,6 @@ export default function DashboardAdmin() {
   };
 
   // ================= TAMBAH KAS GLOBAL =================
-
   const addKas = async () => {
     if (kasAmount <= 0 || !kasDescription) {
       alert("Pastikan jumlah dan deskripsi iuran sudah diisi.");
@@ -118,14 +120,16 @@ export default function DashboardAdmin() {
     try {
       await api.post("/cashflow/", {
         type: kasType,
-        source: kasSource,
         total_amount: kasAmount,
         description: kasDescription,
       });
 
       alert("Kas berhasil ditambahkan!");
+
       setKasAmount(0);
+      setKasAmountDisplay("");
       setKasDescription("");
+
       fetchMonthlySummary();
     } catch {
       alert("Failed to add Kas");
@@ -133,7 +137,6 @@ export default function DashboardAdmin() {
   };
 
   // ================= SET PIN =================
-
   const setPinForMember = async (memberId: number) => {
     try {
       const res = await api.post(`/auth/members/${memberId}/pin`);
@@ -144,7 +147,6 @@ export default function DashboardAdmin() {
   };
 
   // ================= TAMBAH ADMIN =================
-
   const addAdmin = async (email: string) => {
     try {
       const res = await api.post("/admin/register", { email });
@@ -161,62 +163,120 @@ export default function DashboardAdmin() {
 
       {/* ================= KONTRIBUSI MEMBER ================= */}
       <section className="admin-card">
-  <h2>Kontribusi Member</h2>
+        <h2>Kontribusi Member</h2>
 
-  {monthlySummary && (
-    <div className="member-list-card">
+        {monthlySummary && (
+          <div className="member-list-card">
 
-      {/* MEMBER YANG SUDAH BAYAR */}
-      {members.map((member: any) => {
-        const found = monthlySummary.members.find(
-          (m: any) => m.member_id === member.id
-        );
+            {/* MEMBER YANG SUDAH BAYAR */}
+            {members.map((member: any) => {
+              const found = monthlySummary.members.find(
+                (m: any) => m.member_id === member.id
+              );
 
-        const totalPaid = found ? found.total_paid : 0;
+              const totalPaid = found ? found.total_paid : 0;
 
-        return (
-          <div
-            key={member.id}
-            className={`member-row ${totalPaid === 0 ? "unpaid" : ""}`}
-          >
-            <span>{member.name}</span>
+              return (
+                <div
+                  key={member.id}
+                  className={`member-row ${totalPaid === 0 ? "unpaid" : ""}`}
+                >
+                  <span>{member.name}</span>
 
-            <span>
-              Rp {totalPaid.toLocaleString("id-ID")}
-            </span>
+                  <span>
+                    Rp {totalPaid.toLocaleString("id-ID")}
+                  </span>
 
-            <button
-              className="reset-btn"
-              onClick={() => addCashMember(member.id)}
-            >
-              Tambah Cash
-            </button>
+                  <button
+                    className="reset-btn"
+                    onClick={() => {
+                    setSelectedMember(member);
+                    setAmountInput("");
+                    setShowModal(true);
+}}
+                  >
+                    Tambah Cash
+                  </button>
+                </div>
+              );
+            })}
+
+            <div className="divider" />
+
+            <div className="member-row total-row">
+              <span>Total Kas Masuk</span>
+              <span>
+                Rp {monthlySummary.total_in.toLocaleString("id-ID")}
+              </span>
+            </div>
+
+            <div className="member-row total-row">
+              <span>Saldo</span>
+              <span>
+                Rp {monthlySummary.saldo.toLocaleString("id-ID")}
+              </span>
+            </div>
           </div>
-        );
-      })}
+        )}
+      </section>
 
-      <div className="divider" />
+      {showModal && (
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>Tambah Kontribusi</h3>
 
-      <div className="member-row total-row">
-        <span>Total Kas Masuk</span>
-        <span>
-          Rp {monthlySummary.total_in.toLocaleString("id-ID")}
-        </span>
-      </div>
+            <p className="modal-member">
+              {selectedMember?.name}
+            </p>
 
-      <div className="member-row total-row">
-        <span>Saldo</span>
-        <span>
-          Rp {monthlySummary.saldo.toLocaleString("id-ID")}
-        </span>
-      </div>
-    </div>
-  )}
-</section>
+            <label>Nominal</label>
+            <input
+              type="text"
+              value={amountInput}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, "");
+                const formatted = raw
+                  ? "Rp. " + Number(raw).toLocaleString("id-ID")
+                  : "";
+                setAmountInput(formatted);
+              }}
+              placeholder="Rp. 0"
+            />
+
+            <div className="modal-actions">
+              <button
+                className="cancel-btn"
+                onClick={() => setShowModal(false)}
+              >
+                Batal
+              </button>
+
+              <button
+                className="save-btn"
+                onClick={() => {
+                  const numericValue = Number(
+                    amountInput.replace(/\D/g, "")
+                  );
+
+                  if (!numericValue) return;
+
+                  addCashMember(selectedMember.id, numericValue);
+                  setShowModal(false);
+                }}
+              >
+                Simpan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ================= TAMBAH KAS ================= */}
       <section className="admin-card">
-        <h2>Tambah Kas</h2>
+        <h2>Update Kas</h2>
 
         <select
           value={kasType}
@@ -227,21 +287,22 @@ export default function DashboardAdmin() {
           <option value="out">Keluar</option>
         </select>
 
-        <select
-          value={kasSource}
-          onChange={(e) => setKasSource(e.target.value)}
-          className="pin-input"
-        >
-          <option value="expense">Pengeluaran</option>
-          <option value="income">Pemasukan</option>
-          <option value="dues">Iuran</option>
-        </select>
-
         <input
-          type="number"
-          placeholder="Jumlah"
-          value={kasAmount}
-          onChange={(e) => setKasAmount(Number(e.target.value))}
+          type="text"
+          placeholder="Rp. 0"
+          value={kasAmountDisplay}
+          onChange={(e) => {
+            const raw = e.target.value.replace(/\D/g, ""); // ambil angka saja
+            const numeric = Number(raw);
+
+            setKasAmount(numeric);
+
+            if (raw) {
+              setKasAmountDisplay("Rp. " + numeric.toLocaleString("id-ID"));
+            } else {
+              setKasAmountDisplay("");
+            }
+          }}
           className="pin-input"
         />
 

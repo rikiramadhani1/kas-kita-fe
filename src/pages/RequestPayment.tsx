@@ -39,8 +39,6 @@ const memberId = token
   ? (jwtDecode<any>(token).id ?? null)
   : null;
 
-  console.log("aaaaaaaa", memberId)
-
   const myData = monthlySummary?.members.find(
   (m) => m.member_id === memberId
 );
