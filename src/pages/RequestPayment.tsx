@@ -141,7 +141,7 @@ const memberId = token
 
     {/* LIST MEMBER */}
     <div className="member-list-card">
-      <h4>Kontribusi Orang-orang Sukses</h4>
+      <h4>Kontribusi Orang-orang Sukses Bulan ini</h4>
 
       {monthlySummary.members.map((m) => (
         <div key={m.member_id} className="member-row">
