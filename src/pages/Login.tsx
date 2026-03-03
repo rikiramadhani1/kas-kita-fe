@@ -94,7 +94,7 @@ export default function LoginMember() {
               inputMode="numeric"
               pattern="[0-9]*"
               maxLength={6}
-              placeholder="••••••"
+              placeholder="•   •   •   •   •   •"
               value={pin}
               onChange={(e) => {
                 const onlyNumber = e.target.value.replace(/\D/g, "");
