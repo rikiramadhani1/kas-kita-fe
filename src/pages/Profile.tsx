@@ -139,7 +139,13 @@ export default function Profile() {
                 type={showPin ? "text" : "password"}
                 placeholder="Masukkan PIN baru (6 Digit)"
                 value={pin}
-                onChange={(e) => setPin(e.target.value)}
+                onChange={(e) => {
+                  const onlyNumber = e.target.value.replace(/\D/g, "");
+                  setPin(onlyNumber.slice(0, 6));
+                }}
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
                 className="pin-input"
                 disabled={loading}
               />

@@ -91,8 +91,8 @@
 
 /* Message */
 .message {
-  margin-top: 10px;
-  font-weight: 500;
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .message.error {
@@ -103,11 +103,23 @@
   color: #4caf50;
 }
 
+.reset-section {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.reset-section h2 {
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+}
+
 .pin-wrapper {
   position: relative;
   width: 100%;
-  display: flex;
-  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 1px;
 }
 
 .pin-wrapper input {
@@ -118,18 +130,51 @@
   font-size: 1rem;
 }
 
+.pin-wrapper input::placeholder {
+  letter-spacing: 0;
+  font-size: 0.8rem;
+}
+
 .eye-icon {
   position: absolute;
-  right: 0.75rem;
-  bottom: 2rem;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-90%);
   cursor: pointer;
+
+  font-size: 1.2rem;
+  color: #777;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #555;
-  font-size: 1.1rem;
 }
 
 .eye-icon:hover {
   color: #000;
+}
+
+/* ================= BUTTON ================= */
+
+.reset-btn {
+  width: 100%;
+  height: 52px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #4f8cff, #6ea8ff);
+  color: white;
+
+  transition: all 0.25s ease;
+}
+
+.reset-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.25);
+}
+
+.reset-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
