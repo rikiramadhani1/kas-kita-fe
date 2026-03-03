@@ -20,7 +20,7 @@ html, body {
 .login-page {
   position: relative;
   min-height: 100dvh;
-  width: 100%;
+  width: 100dvw;
   padding: 24px 16px;
   display: flex;
   justify-content: center;
