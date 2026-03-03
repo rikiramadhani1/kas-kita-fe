@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -8,52 +8,73 @@ export default function LoginAdmin() {
   const navigate = useNavigate();
   const { isLoggedIn, login, user } = useAuth();
 
+  const emailRef = useRef<HTMLInputElement>(null);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [shake, setShake] = useState(false);
 
   const isFormValid = email.trim() !== "" && password.trim() !== "";
 
-  // Gunakan `isLoggedIn` dan `user` dengan baik untuk kondisi redirect
+  /* =========================
+     AUTO FOCUS EMAIL
+  ========================= */
   useEffect(() => {
-    if (isLoggedIn) {
-      // Pastikan user admin sudah login, baru diarahkan ke /admin
-      if (user?.role === "admin") {
-        navigate("/admin", { replace: true });
-      } else {
-        navigate("/", { replace: true }); // Member redirect ke Dashboard biasa
-      }
+    emailRef.current?.focus();
+  }, []);
+
+  /* =========================
+     REDIRECT LOGIC (NO DOUBLE NAV)
+  ========================= */
+  useEffect(() => {
+    if (!isLoggedIn || !user) return;
+
+    if (user.role === "admin") {
+      navigate("/admin", { replace: true });
+    } else {
+      navigate("/", { replace: true });
     }
   }, [isLoggedIn, user, navigate]);
 
+  /* =========================
+     LOGIN HANDLER
+  ========================= */
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid) return;
+    if (!isFormValid || loading) return;
 
     setLoading(true);
     setError("");
 
     try {
-      await login(email, password, true); // isAdmin = true
-      navigate("/admin", { replace: true });
+      await login(email, password, true);
+      // Redirect handled by useEffect
     } catch (err: any) {
-      setError(err.message || "Login admin gagal.");
+      setError(err?.message || "Login admin gagal.");
+      setShake(true);
+
+      setTimeout(() => setShake(false), 400);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <h2>Admin Login</h2>
-        <p>Masukkan email & password admin</p>
+    <div className="login-page fade-route">
+      <div className={`login-card ${shake ? "shake" : ""}`}>
+        
+        <div className="login-header">
+          <h2>Admin Login</h2>
+          <p>Masukkan email & password admin</p>
+        </div>
 
         <form onSubmit={handleLogin}>
           <input
+            ref={emailRef}
             type="email"
             placeholder="Email admin"
             value={email}
@@ -70,20 +91,23 @@ export default function LoginAdmin() {
             <span
               className="eye-icon"
               onClick={() => setShowPassword((prev) => !prev)}
-              style={{ cursor: "pointer" }}
             >
               {showPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
           </div>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && (
+            <p style={{ color: "red", fontSize: "0.85rem" }}>
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"
-            disabled={loading || !isFormValid}
+            disabled={!isFormValid || loading}
             className={isFormValid ? "active" : ""}
           >
-            {loading ? "Loading..." : "Login"}
+            {loading ? <div className="spinner"></div> : "Login"}
           </button>
         </form>
       </div>

@@ -163,7 +163,7 @@ export default function DashboardAdmin() {
 
       {/* ================= KONTRIBUSI MEMBER ================= */}
       <section className="admin-card">
-        <h2>Kontribusi Member</h2>
+        <h2>Kontribusi Member Bulan ini</h2>
 
         {monthlySummary && (
           <div className="member-list-card">
