@@ -361,3 +361,90 @@ input[type="number"]:focus {
   background: #eee;
   margin: 10px 0;
 }
+
+
+/* ================= MEMBER FILTER ================= */
+
+.month-filter-member {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* Arrow kecil */
+.arrow-btn-member {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+
+  background: transparent;
+  color: #155E75;
+  font-size: 14px;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.2s ease;
+}
+
+.arrow-btn-member:hover:not(:disabled) {
+  transform: scale(1.15);
+}
+
+.arrow-btn-member:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Bulan besar & elegan */
+.month-display-member {
+  cursor: pointer;
+}
+
+.month-text-member {
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #155E75, #40adc6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+
+  animation-duration: 0.3s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Slide animasi */
+.slide-right {
+  animation-name: slideFromRight;
+}
+
+.slide-left {
+  animation-name: slideFromLeft;
+}
+
+@keyframes slideFromRight {
+  from {
+    transform: translateX(40%);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    transform: translateX(-40%);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}

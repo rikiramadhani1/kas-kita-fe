@@ -235,3 +235,90 @@
     padding: 15px;
   }
 }
+
+/* ===== FILTER CONTAINER ===== */
+.month-filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+/* ===== ARROW BUTTON ===== */
+.arrow-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #155E75, #40adc6);
+  color: #fff;
+  font-size: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.2s ease;
+}
+
+.arrow-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.arrow-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ===== MONTH DISPLAY (BUKAN BUTTON) ===== */
+.month-display {
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 10px;
+}
+
+/* ===== MONTH TEXT ===== */
+.month-text {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #155E75, #40adc6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+
+  animation-duration: 0.3s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* SLIDE */
+.slide-right {
+  animation-name: slideFromRight;
+}
+
+.slide-left {
+  animation-name: slideFromLeft;
+}
+
+@keyframes slideFromRight {
+  from {
+    transform: translateX(40%);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    transform: translateX(-40%);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}

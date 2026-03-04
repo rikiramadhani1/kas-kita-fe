@@ -25,6 +25,13 @@ export default function DashboardAdmin() {
   const [newAdminEmail, setNewAdminEmail] = useState<string>("");
   const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null);
 
+  const MIN_DATE = new Date(2026, 1); // Feb 2026
+  const NOW = new Date();
+
+  const [activeDate, setActiveDate] = useState<Date>(NOW);
+  const [isAllTime, setIsAllTime] = useState(false);
+  const [slideDirection, setSlideDirection] = useState<"left" | "right" | "">("");
+
   // ================= DECODE TOKEN =================
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -62,14 +69,60 @@ export default function DashboardAdmin() {
     setWau(43);
   };
 
-  const fetchMonthlySummary = async () => {
+  const handlePrevMonth = () => {
+    if (isAllTime) return;
+
+    const newDate = new Date(activeDate);
+    newDate.setMonth(newDate.getMonth() - 1);
+
+    if (newDate < MIN_DATE) return;
+
+    setSlideDirection("left");
+    setActiveDate(newDate);
+  };
+
+  const handleNextMonth = () => {
+    if (isAllTime) return;
+
+    const newDate = new Date(activeDate);
+    newDate.setMonth(newDate.getMonth() + 1);
+
+    if (
+      newDate.getFullYear() > NOW.getFullYear() ||
+      (newDate.getFullYear() === NOW.getFullYear() &&
+        newDate.getMonth() > NOW.getMonth())
+    ) {
+      return;
+    }
+
+    setSlideDirection("right");
+    setActiveDate(newDate);
+  };
+
+  const handleAllTime = () => {
+    setIsAllTime(true);
+  };
+
+  const handleBackToMonth = () => {
+    setIsAllTime(false);
+  };
+
+  const isPrevDisabled = activeDate <= MIN_DATE || isAllTime;
+
+  const isNextDisabled =
+    activeDate.getFullYear() === NOW.getFullYear() &&
+    activeDate.getMonth() === NOW.getMonth();
+
+  const fetchMonthlySummary = async (
+    month?: number,
+    year?: number
+  ) => {
     try {
-      const now = new Date();
       const res = await api.get("/cashflow/summary", {
-        params: {
-          month: now.getMonth() + 1,
-          year: now.getFullYear(),
-        },
+        params:
+          month && year
+            ? { month, year }
+            : {},
       });
 
       if (res.data.meta?.success) {
@@ -84,8 +137,15 @@ export default function DashboardAdmin() {
     fetchMembers();
     fetchActivities();
     fetchWau();
-    fetchMonthlySummary();
-  }, []);
+    if (isAllTime) {
+      fetchMonthlySummary();
+    } else {
+      fetchMonthlySummary(
+        activeDate.getMonth() + 1,
+        activeDate.getFullYear()
+      );
+    }
+  }, [activeDate, isAllTime]);
 
   // ================= TAMBAH CASH MEMBER =================
   const addCashMember = async (
@@ -164,6 +224,41 @@ export default function DashboardAdmin() {
       {/* ================= KONTRIBUSI MEMBER ================= */}
       <section className="admin-card">
         <h2>Kontribusi Member Bulan ini</h2>
+
+        <div className="month-filter">
+          <button
+            className="arrow-btn"
+            onClick={handlePrevMonth}
+            disabled={isPrevDisabled}
+          >
+            ◀
+          </button>
+
+          <div
+            className="month-display"
+            onClick={!isAllTime ? handleAllTime : handleBackToMonth}
+          >
+            <div
+              key={activeDate.toISOString() + isAllTime}
+              className={`month-text slide-${slideDirection}`}
+            >
+              {isAllTime
+                ? "All Time"
+                : activeDate.toLocaleString("id-ID", {
+                    month: "long",
+                    year: "numeric",
+                  })}
+            </div>
+          </div>
+
+          <button
+            className="arrow-btn"
+            onClick={handleNextMonth}
+            disabled={isNextDisabled}
+          >
+            ▶
+          </button>
+        </div>
 
         {monthlySummary && (
           <div className="member-list-card">
